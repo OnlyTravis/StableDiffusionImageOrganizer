@@ -1,0 +1,4 @@
+PORT = <Number>
+SECRET = <jwt secret>
+ac_USERNAME = <username>
+ac_PASSWORD = <password>

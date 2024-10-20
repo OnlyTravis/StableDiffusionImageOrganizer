@@ -1,0 +1,27 @@
+.list {
+
+}
+.page_item {
+    position: relative;
+    font-size: 1.3em;
+    margin-top: 10px;
+    justify-content: center;
+}
+.page_item > a, .page_item > div > a {
+    color: black;
+    text-decoration: none;
+}
+.page_item > ul {
+    padding-inline-start: 10px;
+    list-style-type: disc;
+}
+.page_item > div {
+    position: relative;
+}
+.page_item > div > button {
+    border: none;
+    background: none;
+    position: absolute;
+    height: 100%;
+    right: 10px;
+}

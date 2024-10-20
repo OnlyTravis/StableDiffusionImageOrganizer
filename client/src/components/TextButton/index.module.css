@@ -1,0 +1,28 @@
+.text_button {
+    cursor: pointer;
+    transition: 0.15s;
+}
+.text_button > img {
+    width: 100%;
+    height: 100%;
+}
+
+/*Button Animations*/
+.text_button.expand:hover {
+    transform: scale(1.1);
+}
+.text_button.expand:active {
+    transform: scale(0.9);
+}
+.text_button.brighten:hover {
+    filter: brightness(110%);
+}
+.text_button.brighten:active {
+    filter: brightness(90%);
+}
+.text_button.darken:hover {
+    filter: brightness(90%);
+}
+.text_button.darken:active {
+    filter: brightness(80%);
+}

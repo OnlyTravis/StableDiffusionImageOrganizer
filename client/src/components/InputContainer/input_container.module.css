@@ -1,0 +1,7 @@
+.input_container {
+    display: inline-flex;
+    vertical-align: middle;
+}
+.input_container > input {
+    margin-left: 10px;
+}

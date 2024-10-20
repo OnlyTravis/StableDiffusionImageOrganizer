@@ -1,0 +1,71 @@
+@keyframes bg_animation {
+    0% {
+        background-position: 0%;
+    }
+    100% {
+        background-position: 100%;
+    }
+}
+.main_page {
+    width: 100dvw;
+    height: 100dvh;
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+}
+.background {
+    width: calc(100dvw + 20px);
+    height: calc(100dvh + 20px);
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    z-index: -1;
+    background-image: url("../../../public/images/background.png");
+    background-position: 0%;
+    filter: blur(2px);
+    animation: bg_animation 40s linear 0s infinite forwards;
+}
+/* Center container for login */
+
+.login_container {
+    width: calc(90vw - 40px);
+    height: auto;
+    padding: 50px 20px 80px 20px;
+    background-color: rgba(184, 235, 255, 0.3);
+    backdrop-filter: blur(9px);
+    box-shadow: rgb(168, 223, 255, 0.3) 2px 2px 3px;
+    border-radius: 30px;
+}
+.welcome_text {
+    font-size: 2em;
+    font-weight: bolder;
+    color: rgb(202, 244, 255);
+}
+.login_container > input {
+    color: rgb(181, 244, 255);
+    background-color: rgba(184, 230, 255, 0.5);
+    border: 0;
+    border-radius: 5px;
+    margin-top: 10px;
+    padding: 5px;
+    font-size: 1.4em;
+}
+.login_container > input::placeholder {
+    color: rgb(141, 199, 209);
+}
+.login_container > input:focus {
+    outline: none;
+}
+.login_button {
+    display: block;
+    appearance: none;
+    background-color: rgb(116, 206, 255);
+    border-radius: 10px;
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1.5em;
+}
+.error_message {
+    color: rgb(0, 183, 255);
+}

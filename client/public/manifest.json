@@ -1,0 +1,9 @@
+{
+  "short_name": "SD_server",
+  "name": "Stable Diffusion Server",
+  "icons": [],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

@@ -1,0 +1,24 @@
+[
+    {
+        "page_name" : "Home",
+        "path" : "/home",
+        "expandable" : false
+    },
+    {
+        "page_name" : "Settings",
+        "path" : "/settings",
+        "expandable" : false
+    },
+    {
+        "page_name" : "Folders",
+        "path" : "/folders",
+        "expandable" : true,
+        "contents" : [
+            {
+                "page_name" : "main_output",
+                "path" : "/folders/main_output",
+                "expandable" : false
+            }
+        ]
+    }
+]
