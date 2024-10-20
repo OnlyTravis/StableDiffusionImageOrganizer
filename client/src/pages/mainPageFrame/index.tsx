@@ -8,18 +8,19 @@ import PageList from "./list";
 
 interface MainPageFrameProp {
     children?: JSX.Element,
+    className?: string,
 }
 
-const MainPageFrame:FC<MainPageFrameProp> = ({ children }: MainPageFrameProp) => {
+const MainPageFrame:FC<MainPageFrameProp> = ({ children, className }: MainPageFrameProp) => {
     const [ toggleSideBar, setToggleSideBar ] = useState(false);
     const navigate = useNavigate();
     
     useEffect(() => {
-        /*axios.get("/is_loggedIn").then((responce) => {
+        axios.get("/is_loggedIn").then((responce) => {
             if (!responce.data.logged_in) {
                 navigate("/login");
             }
-        });*/
+        });
     }, []);
 
     const button_toggleSideBar = () => {
@@ -42,7 +43,7 @@ const MainPageFrame:FC<MainPageFrameProp> = ({ children }: MainPageFrameProp) =>
                 <div className={m_styles.side_menu_backdrop} onClick={button_toggleSideBar}></div>
             </div>
             :<></>}
-            <div className={m_styles.main_container}>
+            <div className={`${m_styles.main_container} ${className}`}>
                 { children }
             </div>
         </div>

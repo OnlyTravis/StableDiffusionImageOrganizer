@@ -1,6 +1,13 @@
 [
     {
         "folder_name" : "main_output",
+        "folder_path" : "/main_output",
+        "name_prefix" : "none",
+        "image_count" : 0
+    },
+    {
+        "folder_name" : "test_folder",
+        "folder_path" : "/test_folder",
         "name_prefix" : "none",
         "image_count" : 0
     }

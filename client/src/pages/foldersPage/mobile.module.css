@@ -1,0 +1,28 @@
+.main_page {
+    display: flex;
+}
+
+/* Folders */
+.folder_container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 33dvw;
+    height: 33dvw;
+}
+.folder_container > .folder_icon {
+    width: 25dvw;
+    height: 25dvw;
+}
+.folder_container > .folder_name {
+    font-size: 1.2em;
+    font-weight: 500;
+    position: absolute;
+    width: 33dvw;
+    text-align: center;
+    left: 0px;
+    bottom: 5px;
+}
+
+/* Buttons */
