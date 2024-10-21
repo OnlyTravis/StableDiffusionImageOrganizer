@@ -1,0 +1,9 @@
+Folders Page
+ - Add Create Folder Button
+ - Add Edit Folder Settings Button
+ - Add Delete Folder Options
+Folder Page
+ - Make Folder Page Frame
+ - Add Select Images Feature
+ - Add Move Selected Images Feature
+Settings Page
