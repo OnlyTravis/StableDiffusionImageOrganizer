@@ -18,6 +18,12 @@ const FolderPage:FC = () => {
     const [ toggleEditMode, setToggleEditMode ] = useState(false);
     const [ selectedItems, setSelectedItems ] = useState<string[]>([]);
 
+    const updateImages = () => {
+        axios.get(`/images?folder=${folder_name}`).then((responce) => {
+            setImages(responce.data);  
+        });
+    }
+
     const button_selectImage = (e: MouseEvent) => {
         const image_name = (e.target as HTMLElement).id;
 
@@ -35,10 +41,94 @@ const FolderPage:FC = () => {
         setToggleEditMode(!toggleEditMode);
     }
 
+    const button_renameImage = () => {
+        let new_name = window.prompt(selectedItems.length == 1?
+            `Rename Image "${selectedItems[0]}" to :\n(No need to add file extension)`:
+            `Rename Images to :\n(No need to add file extension)\nUse "%n(start,length,increment)" for counter`);
+        if (new_name === null) return;
+        if (!new_name) {
+            window.alert("Please Enter A Valid Name");
+            return;
+        }
+
+        if (selectedItems.length == 1) {
+            if (images.findIndex((image) => image === new_name) !== -1) {
+                window.alert("A folder with that name already exists.");
+                return;
+            }
+    
+            const tmp = selectedItems[0].split('.');
+            const extension = tmp[tmp.length-1];
+            new_name += `.${extension}`;
+    
+            axios.post("/rename_image", {
+                folder: folder_name,
+                from: selectedItems[0],
+                to: new_name
+            }).then((response) => {
+                setSelectedItems([]);
+                updateImages();
+            }).catch((err) => {
+                if (err.response && err.response.data && err.response.data.message) {
+                    window.alert(err.response.data.message);
+                } else {
+                    window.alert(err);
+                }
+            });
+        } else {
+            if (!new_name.match(/(%n\(\d+,\d+,\d+\))+/)) {
+                alert("Please use atleast one counter to avoid file name conflict.");
+                return;
+            }
+
+            axios.post("/rename_images", {
+                folder: folder_name,
+                images: selectedItems,
+                to: new_name
+            }).then((response) => {
+                setSelectedItems([]);
+                updateImages();
+            }).catch((err) => {
+                if (err.response && err.response.data && err.response.data.message) {
+                    window.alert(err.response.data.message);
+                } else {
+                    window.alert(err);
+                }
+            });
+        }
+    }
+
+    const button_deleteImage = () => {
+        const confirmation = window.confirm(`Are you sure you want delete the images/s :\n ${selectedItems.join('\n')}?`)
+        if (!confirmation) return;
+
+        axios.post("/delete_image", {
+            folder: folder_name,
+            images: selectedItems,
+        }).then((response) => {
+            setSelectedItems([]);
+            updateImages();
+        }).catch((err) => {
+            if (err.response && err.response.data && err.response.data.message) {
+                window.alert(err.response.data.message);
+            } else {
+                window.alert(err);
+            }
+        })
+    }
+
+    const button_moveImage = () => {
+        
+    }
+
     const ToolBar:FC = () => {
         return (
             <div className={m_styles.toolbar}>
-
+                {selectedItems.length > 0?<>
+                    <ImageButton className={m_styles.tool} animation="brighten" tooltip="Rename Image" src="/images/rename.png" onClick={ button_renameImage }/>
+                    <ImageButton className={m_styles.tool} animation="brighten" tooltip="Delete Images" src="/images/delete.png" onClick={ button_deleteImage }/>
+                    <ImageButton className={m_styles.tool} animation="brighten" tooltip="Move Images" src="/images/move_image.png" onClick={ button_moveImage }/>
+                </>:<></>}
             </div>
         );
     }
@@ -65,9 +155,7 @@ const FolderPage:FC = () => {
     }
 
     useEffect(() => {
-        axios.get(`/images?folder=${folder_name}`).then((responce) => {
-            setImages(responce.data);  
-        });
+        updateImages();
     }, []);
 
     return (

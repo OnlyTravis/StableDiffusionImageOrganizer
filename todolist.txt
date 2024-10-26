@@ -1,7 +1,4 @@
 Folder Page
- - Rename Images
- - Delete Images
  - Move Selected Images 
- - Batch Rename Images
 Settings Page
  ?

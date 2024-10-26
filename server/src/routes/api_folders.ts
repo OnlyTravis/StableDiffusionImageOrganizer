@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs';
 
-import { createFolder, deleteFolder, getFolderList, getImageList, renameFolder } from '../code/folder';
+import { createFolder, deleteFolder, getFolderList, renameFolder } from '../code/folder';
 
 // (12, 6) ---> "000012"
 function toNumLength(num: number, len: number): string {
@@ -71,28 +71,6 @@ router.post("/delete_folder", (req, res) => {
         res.status(400).send(err_message);
     } else {
         res.status(200).send();
-    }
-});
-
-// For Getting Images List in Certain Folder
-router.get("/images", (req, res) => {
-    if (!req.query || !req.query.folder || typeof req.query.folder !== "string") {
-        res.status(400).send();
-        return;
-    }
-
-    if (req.query.folder.match(/[^\w\d\s_-]/)) {
-        res.status(400).send({
-            message: "This is not for ctf..."
-        });
-        return;
-    }
-
-    const image_list = getImageList(req.query.folder);
-    if (!image_list) {
-        res.status(400).send("Something went wrong while gettings images");
-    } else {
-        res.status(200).send(image_list);
     }
 });
 

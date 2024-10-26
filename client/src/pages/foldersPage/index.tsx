@@ -55,7 +55,11 @@ const FoldersPage:FC = () => {
     const button_renameFolder = () => {
         const new_name = window.prompt(`Rename Folder "${selectedItems[0]}" to :`);
 
-        if (!new_name) return;
+        if (new_name === null) return;
+        if (!new_name) {
+            window.alert("Please Enter A Valid Name");
+            return;
+        }
         if (foldersList.findIndex((folder) => folder.folder_name === new_name) !== -1) {
             window.alert("A folder with that name already exists.");
             return;
