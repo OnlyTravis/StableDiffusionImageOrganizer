@@ -7,7 +7,6 @@ const express_1 = __importDefault(require("express"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const router = express_1.default.Router();
 router.post("/login", (req, res) => {
-    console.log(req.body);
     if (!req.body || !req.body.username || !req.body.password) {
         res.status(200).json({
             status: "failed",

@@ -1,7 +1,7 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
-import page_list from "./page_list.json";
 import styles from "./list.module.css";
+import axios from "axios";
 
 interface PageListObj {
     page_name : string,
@@ -46,8 +46,24 @@ const PageItem:FC<PageListObj> = (item: PageListObj, layer: number) => {
 }
 
 const PageList:FC = () => {
+    const [ pageList, setPageList ] = useState(require("./page_list.json"));
+
+    useEffect(() => {
+        axios.get("/folder_list").then((response) => {
+            const index = pageList.findIndex((page: any) => page.page_name === "Folders");
+            setPageList((page_list: any) => {
+                page_list[index].contents = response.data.map((folder: any) => {return {
+                    page_name : `${folder.folder_name}`,
+                    path : `/folder/${folder.folder_name}`,
+                    expandable : false
+                };});
+                return page_list;
+            });
+        });
+    }, []);
+
     return (
-        <ul className={styles.list}>{ makeLi(page_list, 0) }</ul>
+        <ul className={styles.list}>{ makeLi(pageList, 0) }</ul>
     );
 }
 

@@ -1,6 +1,5 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Disallow: /
 
 no ctf flags here 
 also this website is not even for ctf.

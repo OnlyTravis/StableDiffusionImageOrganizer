@@ -13,12 +13,6 @@
         "page_name" : "Folders",
         "path" : "/folders",
         "expandable" : true,
-        "contents" : [
-            {
-                "page_name" : "main_output",
-                "path" : "/folders/main_output",
-                "expandable" : false
-            }
-        ]
+        "contents" : []
     }
 ]

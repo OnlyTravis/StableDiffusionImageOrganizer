@@ -18,8 +18,8 @@
     background: none;
 }
 
-/* Folders */
-.folder_container {
+/* Images */
+.image_container {
     position: relative;
     display: flex;
     justify-content: center;
@@ -27,19 +27,19 @@
     width: 33dvw;
     height: 33dvw;
 }
-.folder_container.selected {
+.image_container.selected {
     background-color: #c4d1dd66;
 }
-.folder_container > button {
+.image_container > button {
     background: none;
     border: none;
     padding: 0px;
 }
-.folder_icon {
-    width: 25dvw;
-    height: 25dvw;
+.image_icon {
+    max-width: 25dvw;
+    max-height: 25dvw;
 }
-.folder_name {
+.image_name {
     font-size: 1.2em;
     font-weight: 500;
     position: absolute;

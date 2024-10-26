@@ -7,7 +7,7 @@ import ImageButton from "../../components/ImageButton";
 import PageList from "./list";
 
 interface MainPageFrameProp {
-    children?: JSX.Element,
+    children?: JSX.Element | JSX.Element[],
     className?: string,
 }
 

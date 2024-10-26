@@ -17,6 +17,8 @@ App.get(["/", "/login"], (req, res) => {
     return;
 });
 mountRouter(App);
+
+App.use("/folders", express.static(process.env.OUTPUT_PATH));
 App.get("/*", (req, res) => {
     res.sendFile(path.join(__dirname, "../build/index.html"));
     return;

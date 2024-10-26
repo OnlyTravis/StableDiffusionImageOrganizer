@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 const router = express.Router();
 
 router.post("/login", (req, res) => {
-    console.log(req.body)
     if (!req.body || !req.body.username || !req.body.password) {
         res.status(200).json({
             status: "failed",

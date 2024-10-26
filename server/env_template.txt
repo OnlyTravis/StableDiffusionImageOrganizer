@@ -1,4 +1,5 @@
 PORT = <Number>
 SECRET = <jwt secret>
+OUTPUT_PATH = <absolute path to folder>
 ac_USERNAME = <username>
 ac_PASSWORD = <password>

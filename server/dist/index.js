@@ -18,6 +18,7 @@ App.get(["/", "/login"], (req, res) => {
     return;
 });
 (0, routes_1.default)(App);
+App.use("/folders", express_1.default.static(process.env.OUTPUT_PATH));
 App.get("/*", (req, res) => {
     res.sendFile(path_1.default.join(__dirname, "../build/index.html"));
     return;
