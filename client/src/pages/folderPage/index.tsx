@@ -18,10 +18,13 @@ interface ImageIconProp {
 
 const FolderPage:FC = () => {
     const [ images, setImages ] = useState<string[]>([]);
+    const [ folderList, setFolderList ] = useState<Folder[]>([]);
+
     const [ toggleEditMode, setToggleEditMode ] = useState(false);
     const [ floatingMenu, setFloatingMenu ] = useState("");
+    const [ openedImage, setOpenedImage ] = useState("");
+
     const [ selectedItems, setSelectedItems ] = useState<string[]>([]);
-    const [ folderList, setFolderList ] = useState<Folder[]>([]);
 
     const folder_name = window.location.pathname.slice(8);
 
@@ -116,6 +119,11 @@ const FolderPage:FC = () => {
         }).catch(errorHandling);
     }
 
+    const button_openImage = (e: MouseEvent) => {
+        const image_name = (e.target as HTMLElement).id;
+        setOpenedImage(image_name);
+    }
+
     const ToolBar:FC = () => {
         return (
             <div className={m_styles.toolbar}>
@@ -138,9 +146,9 @@ const FolderPage:FC = () => {
                 </button>
                 <input type="checkbox" checked={selected} className={m_styles.selected_icon} />
                 </>:
-                <a href={`/folders/${folder_name}/${image_name}`}>
-                    <img className={m_styles.image_icon} src={`/folders/${folder_name}/${image_name}`} alt={`/folders/${folder_name}/${image_name}`}/>
-                </a>
+                <button onClick={button_openImage} id={image_name}>
+                    <img className={m_styles.image_icon} id={image_name} src={`/folders/${folder_name}/${image_name}`} alt={`/folders/${folder_name}/${image_name}`}/>
+                </button>
                 }
                 <div className={m_styles.image_name}>{ image_name }</div>
             </div>
@@ -163,6 +171,36 @@ const FolderPage:FC = () => {
         }
     }
 
+    document.addEventListener("fullscreenchange", (e) => {
+        if (!document.fullscreenElement) {
+            setOpenedImage("");
+        }
+    });
+    const FullScreenImage:FC = () => {
+        useEffect(() => {
+            const index = images.findIndex((image) => image === openedImage);
+
+            const ele = document.querySelector("#fullscreen_image");
+            if (!ele) {
+                setOpenedImage("");
+                return;
+            }
+            ele.requestFullscreen();
+            ele.scrollLeft = window.innerWidth*index;
+
+        }, []);
+
+        return (
+            <div className={m_styles.full_image_container} id="fullscreen_image">
+                { images.map((image) => 
+                <div className={m_styles.full_image}>
+                    <img src={`/folders/${folder_name}/${image}`} />
+                </div>) 
+                }
+            </div>
+        );
+    }
+
     useEffect(() => {
         updateImages();
         axios.get("/folder_list").then((response) => {
@@ -183,7 +221,7 @@ const FolderPage:FC = () => {
             <ToolBar />
             :<></>}
 
-            <div className={m_styles.main_page}>
+            <div className={m_styles.main_page} style={{maxHeight: `${toggleEditMode?"86dvh":"90dvh"}`}}>
                 { images.map((image) => <ImageIcon image_name={image} edit_mode={toggleEditMode}/>) }
                 <ImageButton className={m_styles.toggle_edit_button} animation="expand" src="/images/edit.png" onClick={button_toggleEditMode}/>
             </div>
@@ -194,6 +232,8 @@ const FolderPage:FC = () => {
                 <div className={m_styles.floating_menu_backdrop} onClick={() => {setFloatingMenu("")}}></div>
             </div>
             :<></>}
+
+            {openedImage? <FullScreenImage /> :<></>}
         </MainPageFrame>
     );
 }

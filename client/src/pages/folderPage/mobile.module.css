@@ -2,6 +2,7 @@
     width: 100dvw;
     display: flex;
     flex-wrap: wrap;
+    overflow-y: scroll;
 }
 
 /* TopBar */
@@ -16,7 +17,7 @@
     font-size: 1.3em;
     font-weight: bold;
     line-height: 3dvh;
-    margin-left: 20px;
+    margin-left: 10px;
 }
 .selected_count {
     position: absolute;
@@ -61,13 +62,13 @@
     max-height: 25dvw;
 }
 .image_name {
-    font-size: 1.2em;
-    font-weight: 500;
     position: absolute;
-    width: 33dvw;
-    text-align: center;
     left: 0px;
-    bottom: 5px;
+    bottom: 0px;
+    width: 33dvw;
+    font-size: 0.8em;
+    font-weight: 500;
+    text-align: center;
 }
 .selected_icon {
     position: absolute;
@@ -115,4 +116,27 @@
     width: 80dvw;
     height: 50dvh;
     margin-top: 7dvh;
+}
+
+/* Fullscreen Image */
+.full_image_container {
+    width: 100dvw;
+    height: 100dvh;
+    position: relative;
+    display: inline-flex;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    background-color: rgba(65, 65, 65, 0.536);
+}
+.full_image_container > .full_image {
+    width: 100dvw;
+    height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    scroll-snap-align: center;
+}
+.full_image > img {
+    max-width: 100dvw;
+    max-height: 100dvh;
 }
