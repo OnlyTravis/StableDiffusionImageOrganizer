@@ -4,6 +4,27 @@
     flex-wrap: wrap;
 }
 
+/* TopBar */
+.topbar {
+    width: 100dvw;
+    height: 3dvh;
+    background-color: #9dd2ff;
+    position: relative;
+    display: inline-flex;
+}
+.page_title {
+    font-size: 1.3em;
+    font-weight: bold;
+    line-height: 3dvh;
+    margin-left: 20px;
+}
+.selected_count {
+    position: absolute;
+    right: 20px;
+    font-size: 1.3em;
+    line-height: 3dvh;
+}
+
 /* Toolbar */
 .toolbar {
     width: 100dvw;
@@ -67,4 +88,31 @@
     position: absolute;
     bottom: 20px;
     right: 20px;
+}
+
+/* Floating Menu */
+.floating_menu_container {
+    width: 100dvw;
+    height: 100dvh;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    top: 0px;
+    left: 0px;
+    z-index: 1;
+}
+.floating_menu_backdrop {
+    width: 100dvw;
+    height: 100dvh;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: #9c9c9c4e;
+    backdrop-filter: blur(3px);
+    z-index: -1;
+}
+.floating_menu {
+    width: 80dvw;
+    height: 50dvh;
+    margin-top: 7dvh;
 }

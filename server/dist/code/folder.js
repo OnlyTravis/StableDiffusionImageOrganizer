@@ -11,6 +11,7 @@ exports.getImageList = getImageList;
 exports.renameImage = renameImage;
 exports.renameImages = renameImages;
 exports.deleteImage = deleteImage;
+exports.moveImage = moveImage;
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const settings_1 = require("./settings");
@@ -33,6 +34,7 @@ function createFolder(folder_name) {
         folder_name: folder_name,
         image_count: 0
     });
+    folder_list = folder_list.sort((a, b) => a.folder_name > b.folder_name ? 1 : -1);
     updateFolderList();
     return true;
 }
@@ -45,6 +47,7 @@ function renameFolder(from, to) {
     }
     const index = folder_list.findIndex((folder) => folder.folder_name === from);
     folder_list[index].folder_name = to;
+    folder_list = folder_list.sort((a, b) => a.folder_name > b.folder_name ? 1 : -1);
     updateFolderList();
     fs_1.default.renameSync(path_1.default.join(process.env.OUTPUT_PATH, from), path_1.default.join(process.env.OUTPUT_PATH, to));
     return "";
@@ -153,6 +156,22 @@ function deleteImage(folder, images) {
     }
     for (let i = 0; i < images.length; i++) {
         fs_1.default.unlinkSync(path_1.default.join(process.env.OUTPUT_PATH, folder, images[i]));
+    }
+    return "";
+}
+function moveImage(folder, destination, images) {
+    for (let i = 0; i < images.length; i++) {
+        if (!fs_1.default.existsSync(path_1.default.join(process.env.OUTPUT_PATH, folder, images[i]))) {
+            return "Atleast 1 of the image you are trying to delete does not exists.";
+        }
+    }
+    for (let i = 0; i < images.length; i++) {
+        if (fs_1.default.existsSync(path_1.default.join(process.env.OUTPUT_PATH, destination, images[i]))) {
+            return "Atleast 1 image with the same name already exist in the destination folder.";
+        }
+    }
+    for (let i = 0; i < images.length; i++) {
+        fs_1.default.renameSync(path_1.default.join(process.env.OUTPUT_PATH, folder, images[i]), path_1.default.join(process.env.OUTPUT_PATH, destination, images[i]));
     }
     return "";
 }

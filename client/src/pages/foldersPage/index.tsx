@@ -29,6 +29,14 @@ const FoldersPage:FC = () => {
         });
     }
 
+    const errorHandling = (err: any) => {
+        if (err.response && err.response.data) {
+            window.alert(err.response.data);
+        } else {
+            window.alert(err);
+        }
+    }
+
     const button_selectFolder = (e: MouseEvent) => {
         const folder_name = (e.target as HTMLElement).id;
 
@@ -71,13 +79,7 @@ const FoldersPage:FC = () => {
         }).then((response) => {
             setSelectedItems([]);
             updateFolder();
-        }).catch((err) => {
-            if (err.response && err.response.data && err.response.data.message) {
-                window.alert(err.response.data.message);
-            } else {
-                window.alert(err);
-            }
-        });
+        }).catch(errorHandling);
     }
 
     const button_deleteFolder = () => {
@@ -89,13 +91,7 @@ const FoldersPage:FC = () => {
         }).then((response) => {
             setSelectedItems([]);
             updateFolder();
-        }).catch((err) => {
-            if (err.response && err.response.data && err.response.data.message) {
-                window.alert(err.response.data.message);
-            } else {
-                window.alert(err);
-            }
-        })
+        }).catch(errorHandling);
     }
 
     const ToolBar:FC = () => {
@@ -139,6 +135,12 @@ const FoldersPage:FC = () => {
 
     return (
         <MainPageFrame>
+            <div className={m_styles.topbar}>
+                <div className={m_styles.page_title}> Root_Folder </div>
+                {toggleEditMode?
+                <div className={m_styles.selected_count}> Selected : {selectedItems.length} </div>
+                :<></>}
+            </div>
             {toggleEditMode?
             <ToolBar />
             :<></>}

@@ -30,15 +30,11 @@ router.post("/create_folder", (req, res) => {
 // For renaming folder
 router.post("/rename_folder", (req, res) => {
     if (!req.body || !req.body.from || !req.body.to) {
-        res.status(400).send({
-            message: "Invalid Request"
-        });
+        res.status(400).send("Invalid Request");
         return;
     }
     if (req.body.from.match(/[^\w\d\s_-]/) || req.body.to.match(/[^\w\d\s_-]/)) {
-        res.status(400).send({
-            message: "No Special Symbols except '-' and '_'."
-        });
+        res.status(400).send("No Special Symbols except '-' and '_'.");
         return;
     }
     const err_message = (0, folder_1.renameFolder)(req.body.from, req.body.to);
@@ -52,9 +48,7 @@ router.post("/rename_folder", (req, res) => {
 // For deleting Folder
 router.post("/delete_folder", (req, res) => {
     if (!req.body || !req.body.folders || !Array.isArray(req.body.folders)) {
-        res.status(400).send({
-            message: "Invalid Request"
-        });
+        res.status(400).send("Invalid Request");
         return;
     }
     const err_message = (0, folder_1.deleteFolder)(req.body.folders);

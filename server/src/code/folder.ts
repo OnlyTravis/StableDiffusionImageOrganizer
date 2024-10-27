@@ -27,6 +27,7 @@ export function createFolder(folder_name: string): boolean {
         folder_name : folder_name,
         image_count : 0
     });
+    folder_list = folder_list.sort((a, b) => a.folder_name > b.folder_name?1:-1);
     updateFolderList();
 
     return true;
@@ -43,6 +44,7 @@ export function renameFolder(from: string, to: string): string {
 
     const index = folder_list.findIndex((folder) => folder.folder_name === from);
     folder_list[index].folder_name = to;
+    folder_list = folder_list.sort((a, b) => a.folder_name > b.folder_name?1:-1);
     updateFolderList();
 
     fs.renameSync(path.join(process.env.OUTPUT_PATH, from), path.join(process.env.OUTPUT_PATH, to));
@@ -166,8 +168,7 @@ export function renameImages(folder: string, images: string[], to: string) {
     return "";
 }
 
-
-export function deleteImage(folder:string, images: string[]): string {
+export function deleteImage(folder: string, images: string[]): string {
     for (let i = 0; i < images.length; i++) {
         if (!fs.existsSync(path.join(process.env.OUTPUT_PATH, folder, images[i]))) {
             return "Atleast 1 of the image you are trying to delete does not exists.";
@@ -176,6 +177,25 @@ export function deleteImage(folder:string, images: string[]): string {
 
     for (let i = 0; i < images.length; i++) {   
         fs.unlinkSync(path.join(process.env.OUTPUT_PATH, folder, images[i]));
+    }
+
+    return "";
+}
+
+export function moveImage(folder: string, destination: string, images: string[]): string {
+    for (let i = 0; i < images.length; i++) {
+        if (!fs.existsSync(path.join(process.env.OUTPUT_PATH, folder, images[i]))) {
+            return "Atleast 1 of the image you are trying to delete does not exists.";
+        }
+    }
+    for (let i = 0; i < images.length; i++) {
+        if (fs.existsSync(path.join(process.env.OUTPUT_PATH, destination, images[i]))) {
+            return "Atleast 1 image with the same name already exist in the destination folder.";
+        }
+    }
+
+    for (let i = 0; i < images.length; i++) {   
+        fs.renameSync(path.join(process.env.OUTPUT_PATH, folder, images[i]), path.join(process.env.OUTPUT_PATH, destination, images[i]));
     }
 
     return "";
