@@ -142,8 +142,8 @@ export function renameImages(folder: string, images: string[], to: string) {
         }
         name += `.${extension}`;
 
-        // 4.2 Check if file already exists
-        if (fs.existsSync(path.join(process.env.OUTPUT_PATH, folder, name))) {
+        // 4.2 Check if file already exists or file is within the images pending to be renames
+        if (images.findIndex((img) => img === name) === -1 && fs.existsSync(path.join(process.env.OUTPUT_PATH, folder, name))) {
             return "There is already other image with that name.";
         }
     }

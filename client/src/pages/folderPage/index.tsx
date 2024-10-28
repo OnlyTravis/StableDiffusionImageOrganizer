@@ -36,6 +36,7 @@ const FolderPage:FC = () => {
 
     const onFinish = () => {
         setSelectedItems([]);
+        setToggleEditMode(false);
         updateImages();
     }
 

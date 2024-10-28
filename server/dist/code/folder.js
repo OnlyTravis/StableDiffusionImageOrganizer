@@ -126,8 +126,8 @@ function renameImages(folder, images, to) {
             values[j] += params[j][2];
         }
         name += `.${extension}`;
-        // 4.2 Check if file already exists
-        if (fs_1.default.existsSync(path_1.default.join(process.env.OUTPUT_PATH, folder, name))) {
+        // 4.2 Check if file already exists or file is within the images pending to be renames
+        if (images.findIndex((img) => img === name) === -1 && fs_1.default.existsSync(path_1.default.join(process.env.OUTPUT_PATH, folder, name))) {
             return "There is already other image with that name.";
         }
     }
