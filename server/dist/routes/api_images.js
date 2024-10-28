@@ -48,13 +48,13 @@ router.post("/rename_images", (req, res) => {
         return;
     }
     for (let i = 0; i < req.body.images.length; i++) {
-        if (req.body.images[i].match(/[^\w\d\s._%-]/)) {
-            res.status(400).send("No Special Symbols except '-' and '_'.");
+        if (req.body.images[i].match(/[^\w\d\s._%()-]/)) {
+            res.status(400).send("No Special Symbols except '.-_()'.");
             return;
         }
     }
     if (req.body.to.match(/[^\w\d\s.,_%()-]/)) {
-        res.status(400).send("No Special Symbols except '-' and '_'.");
+        res.status(400).send("No Special Symbols except '.-_()'.");
         return;
     }
     const err_message = (0, folder_2.renameImages)(req.body.folder, req.body.images, req.body.to);

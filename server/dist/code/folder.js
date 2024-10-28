@@ -39,12 +39,12 @@ function createFolder(folder_name) {
     return true;
 }
 function renameFolder(from, to) {
-    if (!fs_1.default.existsSync(path_1.default.join(process.env.OUTPUT_PATH, from))) {
+    if (to === "_tmp_")
+        return "Folder Name '_tmp_' is reserved for batch renaming images.";
+    if (!fs_1.default.existsSync(path_1.default.join(process.env.OUTPUT_PATH, from)))
         return "The folder you're trying to rename does not exists.";
-    }
-    if (fs_1.default.existsSync(path_1.default.join(process.env.OUTPUT_PATH, to))) {
+    if (fs_1.default.existsSync(path_1.default.join(process.env.OUTPUT_PATH, to)))
         return "There is already other folder with that name.";
-    }
     const index = folder_list.findIndex((folder) => folder.folder_name === from);
     folder_list[index].folder_name = to;
     folder_list = folder_list.sort((a, b) => a.folder_name > b.folder_name ? 1 : -1);
@@ -93,7 +93,7 @@ function renameImages(folder, images, to) {
     // 1. Sort Selected Images
     images = images.sort((a, b) => (a > b) ? 1 : -1);
     // 2. Check if params is good
-    if (!to.match(/(%n\(\d+,\d+,\d+\))+/)) {
+    if (!to.match(/(%n\((\s*\d+\s*,){2}(\s*\d+\s*)\))+/)) {
         return "Please use atleast one counter to avoid file name conflict.";
     }
     for (let i = 0; i < images.length; i++) {
@@ -101,18 +101,20 @@ function renameImages(folder, images, to) {
             return "The image you're trying to rename does not exists.";
         }
     }
-    // 3. Extract params of counters
+    // 3. Extract & check params of counters
     const params = [];
-    const reg_result = [...to.matchAll(/(%n\(\d+,\d+,\d+\))+/g)];
+    const reg_result = [...to.matchAll(/(%n\((\s*\d+\s*,){2}(\s*\d+\s*)\))+/g)];
     for (let i = 0; i < reg_result.length; i++) {
         to = to.replaceAll(reg_result[i][0], "&&&");
-        const arr = reg_result[i][0].split(",");
-        arr[0] = arr[0].slice(3);
-        arr[2] = arr[2].slice(0, arr[2].length - 1);
+        const arr = reg_result[i][0].slice(3, reg_result[i][0].length - 1).split(",");
         params.push(arr.map((n) => parseInt(n)));
+        if (params[params.length - 1][1] <= 0 || params[params.length - 1][2] === 0) {
+            return "Invalid Counter Parameters.";
+        }
     }
     // 4. Check for conflicts (to: imageblablabla_&&&_&&&)
     let values = [];
+    const new_names = [];
     for (let i = 0; i < params.length; i++) {
         values[i] = params[i][0];
     }
@@ -130,22 +132,17 @@ function renameImages(folder, images, to) {
         if (images.findIndex((img) => img === name) === -1 && fs_1.default.existsSync(path_1.default.join(process.env.OUTPUT_PATH, folder, name))) {
             return "There is already other image with that name.";
         }
+        new_names.push(name);
     }
     // 5. Rename All Image Files Selected
-    for (let i = 0; i < params.length; i++) {
-        values[i] = params[i][0];
+    fs_1.default.mkdirSync(path_1.default.join(process.env.OUTPUT_PATH, "./_tmp_"));
+    for (let i = 0; i < images.length; i++) {
+        fs_1.default.renameSync(path_1.default.join(process.env.OUTPUT_PATH, folder, images[i]), path_1.default.join(process.env.OUTPUT_PATH, "./_tmp_", new_names[i]));
     }
     for (let i = 0; i < images.length; i++) {
-        const tmp = images[i].split(".");
-        const extension = tmp[tmp.length - 1];
-        let name = to;
-        for (let j = 0; j < params.length; j++) {
-            name = name.replace("&&&", toNumLength(values[j], params[j][1]));
-            values[j] += params[j][2];
-        }
-        name += `.${extension}`;
-        fs_1.default.renameSync(path_1.default.join(process.env.OUTPUT_PATH, folder, images[i]), path_1.default.join(process.env.OUTPUT_PATH, folder, name));
+        fs_1.default.renameSync(path_1.default.join(process.env.OUTPUT_PATH, "./_tmp_", new_names[i]), path_1.default.join(process.env.OUTPUT_PATH, folder, new_names[i]));
     }
+    fs_1.default.rmdirSync(path_1.default.join(process.env.OUTPUT_PATH, "./_tmp_"));
     return "";
 }
 function deleteImage(folder, images) {

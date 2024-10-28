@@ -93,11 +93,6 @@ const FolderPage:FC = () => {
                 onFinish();
             }).catch(errorHandling);
         } else {
-            if (!new_name.match(/(%n\(\d+,\d+,\d+\))+/)) {
-                alert("Please use atleast one counter to avoid file name conflict.");
-                return;
-            }
-
             axios.post("/rename_images", {
                 folder: folder_name,
                 images: selectedItems,
