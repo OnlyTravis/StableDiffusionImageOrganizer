@@ -81,14 +81,24 @@
 
 /* Buttons */
 .toggle_edit_button { 
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 50px;
     background-color: rgb(161, 210, 255);
     padding: 20px;
     position: absolute;
     bottom: 20px;
     right: 20px;
+}
+.refresh_button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    background-color: rgb(150, 255, 218);
+    position: absolute;
+    padding: 0px;
+    bottom: 20px;
+    right: 105px;
 }
 
 /* Floating Menu */
@@ -130,6 +140,7 @@
 }
 .full_image_container > .full_image {
     width: 100dvw;
+    min-width: 100dvw;
     height: 100dvh;
     display: flex;
     align-items: center;

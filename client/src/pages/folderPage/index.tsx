@@ -220,6 +220,7 @@ const FolderPage:FC = () => {
             <div className={m_styles.main_page} style={{maxHeight: `${toggleEditMode?"86dvh":"90dvh"}`}}>
                 { images.map((image) => <ImageIcon image_name={image} edit_mode={toggleEditMode}/>) }
                 <ImageButton className={m_styles.toggle_edit_button} animation="expand" src="/images/edit.png" onClick={button_toggleEditMode}/>
+                <ImageButton className={m_styles.refresh_button} animation="expand" src="/images/refresh.png" onClick={updateImages}/>
             </div>
 
             {floatingMenu?
