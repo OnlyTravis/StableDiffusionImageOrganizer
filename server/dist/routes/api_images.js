@@ -4,9 +4,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const sharp_1 = __importDefault(require("sharp"));
+const path_1 = __importDefault(require("path"));
+const fs_1 = __importDefault(require("fs"));
 const folder_1 = require("../../dist/code/folder");
 const folder_2 = require("../code/folder");
 const router = express_1.default.Router();
+router.get("/folders/*", (req, res) => {
+    const image_path = path_1.default.join(process.env.OUTPUT_PATH, "../", req.url.split("?")[0]);
+    if (!fs_1.default.existsSync(image_path)) {
+        res.status(400).send("Image Doesn't Exist.");
+        return;
+    }
+    if (req.query && req.query.compress) {
+        const image = (0, sharp_1.default)(image_path);
+        image.metadata().then((metadata) => {
+            image.resize(Math.round(metadata.width / 4)).toFormat("jpeg").toBuffer().then((buffer) => {
+                res.contentType('image/jpeg');
+                res.send(buffer);
+            });
+        });
+    }
+    else {
+        res.sendFile(image_path);
+    }
+});
 // For Getting Images List in Certain Folder
 router.get("/images", (req, res) => {
     if (!req.query || !req.query.folder || typeof req.query.folder !== "string") {

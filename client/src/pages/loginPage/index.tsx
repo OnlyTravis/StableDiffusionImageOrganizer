@@ -51,7 +51,7 @@ const LoginPage:FC = () => {
                 <div className={m_styles.welcome_text}>SD_UI Login</div>
                 <input type="text" placeholder="Username" onChange={(e: ChangeEvent) => setUsername((e.target as HTMLInputElement).value)} />
                 <br />
-                <input type="text" placeholder="Password" onChange={(e: ChangeEvent) => setPassword((e.target as HTMLInputElement).value)} />
+                <input type="password" placeholder="Password" onChange={(e: ChangeEvent) => setPassword((e.target as HTMLInputElement).value)} />
                 <br />
                 <TextButton className={m_styles.login_button} onClick={button_handleLogin}>Login</TextButton>
                 <br />

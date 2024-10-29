@@ -20,6 +20,9 @@ function toNumLength(num, len) {
     let str = num.toString();
     return (new Array((len - str.length) > 0 ? (len - str.length) : 0)).fill('0').join('') + str;
 }
+function getFolderIndex(folder_name) {
+    return folder_list.findIndex((folder_obj) => folder_obj.folder_name === folder_name);
+}
 function updateFolderList() {
     fs_1.default.writeFileSync(path_1.default.join(__dirname, "../../data/folders_list.json"), JSON.stringify(folder_list));
 }
@@ -77,6 +80,15 @@ function getImageList(folder) {
         const extension = tmp[tmp.length - 1];
         return (allowed_extensions.findIndex((ex) => ex === extension) !== -1);
     });
+    const index = getFolderIndex(folder);
+    if (index === -1) {
+        console.log("Error: Couldn't find folder in folder_list.json in getImageList in /src/code/folder.ts.");
+        return file_list;
+    }
+    if (file_list.length !== folder_list[index]) {
+        folder_list[index].image_count = file_list.length;
+        updateFolderList();
+    }
     return file_list;
 }
 function renameImage(folder, from, to) {
@@ -154,6 +166,9 @@ function deleteImage(folder, images) {
     for (let i = 0; i < images.length; i++) {
         fs_1.default.unlinkSync(path_1.default.join(process.env.OUTPUT_PATH, folder, images[i]));
     }
+    const index = getFolderIndex(folder);
+    folder_list[index].image_count -= images.length;
+    updateFolderList();
     return "";
 }
 function moveImage(folder, destination, images) {
@@ -170,5 +185,10 @@ function moveImage(folder, destination, images) {
     for (let i = 0; i < images.length; i++) {
         fs_1.default.renameSync(path_1.default.join(process.env.OUTPUT_PATH, folder, images[i]), path_1.default.join(process.env.OUTPUT_PATH, destination, images[i]));
     }
+    const index_1 = getFolderIndex(folder);
+    const index_2 = getFolderIndex(destination);
+    folder_list[index_1].image_count -= images.length;
+    folder_list[index_2].image_count += images.length;
+    updateFolderList();
     return "";
 }

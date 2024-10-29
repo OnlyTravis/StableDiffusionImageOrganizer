@@ -17,13 +17,21 @@ interface ImageIconProp {
 }
 
 const FolderPage:FC = () => {
+    // Image List & Folders List
     const [ images, setImages ] = useState<string[]>([]);
     const [ folderList, setFolderList ] = useState<Folder[]>([]);
 
-    const [ toggleEditMode, setToggleEditMode ] = useState(false);
+    // For Display
+    const [ itemPerPage, setItemPerPage ] = useState(3*Math.floor((0.9*window.innerHeight - 20)/(window.innerWidth/3)));
+    const [ page, setPage ] = useState(0);
     const [ floatingMenu, setFloatingMenu ] = useState("");
-    const [ openedImage, setOpenedImage ] = useState("");
 
+    // Fullscreen
+    const [ fullscreen, setFullscreen ] = useState(false);
+    const [ viewingImage, setViewingImage ] = useState(-1);
+
+    // Edit Mode
+    const [ toggleEditMode, setToggleEditMode ] = useState(false);
     const [ selectedItems, setSelectedItems ] = useState<string[]>([]);
 
     const folder_name = window.location.pathname.slice(8);
@@ -32,13 +40,13 @@ const FolderPage:FC = () => {
         axios.get(`/images?folder=${folder_name}`).then((responce) => {
             setImages(responce.data);  
         });
-    }
+    } // Update images by fetching image list from server
 
     const onFinish = () => {
         setSelectedItems([]);
         setToggleEditMode(false);
         updateImages();
-    }
+    } // Resets selected items, turn off edit mode, update folder
 
     const errorHandling = (err: any) => {
         if (err.response && err.response.data) {
@@ -46,8 +54,16 @@ const FolderPage:FC = () => {
         } else {
             window.alert(err);
         }
-    }
+    } // To handle axios error and invalid requests
 
+    const button_toggleEditMode = () => {
+        setItemPerPage(3*Math.floor(((toggleEditMode?0.9:0.86)*window.innerHeight - 20)/(window.innerWidth/3)));
+        if (toggleEditMode) {
+            setSelectedItems([]);
+        }
+        setToggleEditMode(!toggleEditMode);
+    } // Toggles edit mode (allows user to rename, delete, move images)
+    
     const button_selectImage = (e: MouseEvent) => {
         const image_name = (e.target as HTMLElement).id;
 
@@ -56,14 +72,7 @@ const FolderPage:FC = () => {
         } else {
             setSelectedItems(selectedItems.filter((selected) => selected !== image_name));
         }
-    }
-
-    const button_toggleEditMode = () => {
-        if (toggleEditMode) {
-            setSelectedItems([]);
-        }
-        setToggleEditMode(!toggleEditMode);
-    }
+    } // Allows user to select images (only in edit mode)
 
     const button_renameImage = () => {
         let new_name = window.prompt(selectedItems.length == 1?
@@ -101,7 +110,7 @@ const FolderPage:FC = () => {
                 onFinish();
             }).catch(errorHandling);
         }
-    }
+    } // Allows user to rename images
 
     const button_deleteImage = () => {
         const confirmation = window.confirm(`Are you sure you want delete the images/s :\n ${selectedItems.join('\n')}?`)
@@ -113,12 +122,25 @@ const FolderPage:FC = () => {
         }).then((response) => {
             onFinish();
         }).catch(errorHandling);
-    }
+    } // Allows user to delete selected images
 
     const button_openImage = (e: MouseEvent) => {
         const image_name = (e.target as HTMLElement).id;
-        setOpenedImage(image_name);
-    }
+        setFullscreen(true);
+        setViewingImage(images.findIndex((image) => image === image_name));
+    } // Allows user to view image in fullscreen
+
+    const button_setPage = () => {
+        const response = prompt(`Which page would you like to skip to?\n(1 to ${Math.ceil(images.length/itemPerPage)})`);
+        if (!response) return;
+
+        const target_page = parseInt(response);
+        if (!target_page || target_page < 1 || target_page > Math.ceil(images.length/itemPerPage)) {
+            alert("Please Enter A Valid Page Number.");
+            return;
+        }
+        setPage(target_page - 1);
+    } // Allows user to set to a certain page
 
     const ToolBar:FC = () => {
         return (
@@ -138,12 +160,12 @@ const FolderPage:FC = () => {
             <div className={`${m_styles.image_container} ${selected?m_styles.selected:""}`}>
                 {edit_mode?<>
                 <button onClick={button_selectImage} id={image_name}>
-                    <img className={m_styles.image_icon} id={image_name} src={`/folders/${folder_name}/${image_name}`} alt={`/folders/${folder_name}/${image_name}`} />
+                    <img className={m_styles.image_icon} id={image_name} src={`/folders/${folder_name}/${image_name}?compress=true`} alt={`/folders/${folder_name}/${image_name}`} />
                 </button>
                 <input type="checkbox" checked={selected} className={m_styles.selected_icon} />
                 </>:
                 <button onClick={button_openImage} id={image_name}>
-                    <img className={m_styles.image_icon} id={image_name} src={`/folders/${folder_name}/${image_name}`} alt={`/folders/${folder_name}/${image_name}`}/>
+                    <img className={m_styles.image_icon} id={image_name} src={`/folders/${folder_name}/${image_name}?compress=true`} alt={`/folders/${folder_name}/${image_name}`}/>
                 </button>
                 }
                 <div className={m_styles.image_name}>{ image_name }</div>
@@ -169,33 +191,10 @@ const FolderPage:FC = () => {
 
     document.addEventListener("fullscreenchange", (e) => {
         if (!document.fullscreenElement) {
-            setOpenedImage("");
+            setFullscreen(false);
+            setViewingImage(-1);
         }
     });
-    const FullScreenImage:FC = () => {
-        useEffect(() => {
-            const index = images.findIndex((image) => image === openedImage);
-
-            const ele = document.querySelector("#fullscreen_image");
-            if (!ele) {
-                setOpenedImage("");
-                return;
-            }
-            ele.requestFullscreen();
-            ele.scrollLeft = window.innerWidth*index;
-
-        }, []);
-
-        return (
-            <div className={m_styles.full_image_container} id="fullscreen_image">
-                { images.map((image) => 
-                <div className={m_styles.full_image}>
-                    <img src={`/folders/${folder_name}/${image}`} />
-                </div>) 
-                }
-            </div>
-        );
-    }
 
     useEffect(() => {
         updateImages();
@@ -203,6 +202,16 @@ const FolderPage:FC = () => {
             setFolderList(response.data);
         });
     }, []);
+
+    useEffect(() => {
+        const ele = document.querySelector("#fullscreen_image");
+        if (!ele) {
+            setFullscreen(false);
+            setViewingImage(-1);
+            return;
+        }
+        ele.requestFullscreen();
+    }, [fullscreen]);
 
     return (
         <MainPageFrame>
@@ -218,7 +227,18 @@ const FolderPage:FC = () => {
             :<></>}
 
             <div className={m_styles.main_page} style={{maxHeight: `${toggleEditMode?"86dvh":"90dvh"}`}}>
-                { images.map((image) => <ImageIcon image_name={image} edit_mode={toggleEditMode}/>) }
+                { images.slice(page*itemPerPage, (page+1)*itemPerPage).map((image) => <ImageIcon image_name={image} edit_mode={toggleEditMode}/>) }
+                <div className={m_styles.page_bar}>
+                    {page > 0?<>
+                        <button onClick={() => setPage(0)}>{"<<"}</button>
+                        <button onClick={() => setPage(page-1)}>{"<"}</button>
+                    </>:<></>}
+                    <button onClick={() => {}}>{ page+1 }</button>
+                    {page < Math.ceil(images.length/itemPerPage-1)?<>
+                        <button onClick={() => setPage(page+1)}>{">"}</button>
+                        <button onClick={() => setPage(Math.ceil(images.length/itemPerPage)-1)}>{">>"}</button>
+                    </>:<></>}
+                </div>
                 <ImageButton className={m_styles.toggle_edit_button} animation="expand" src="/images/edit.png" onClick={button_toggleEditMode}/>
                 <ImageButton className={m_styles.refresh_button} animation="expand" src="/images/refresh.png" onClick={updateImages}/>
             </div>
@@ -230,7 +250,16 @@ const FolderPage:FC = () => {
             </div>
             :<></>}
 
-            {openedImage? <FullScreenImage /> :<></>}
+            {fullscreen? 
+            <div className={m_styles.full_image_container} id="fullscreen_image">
+                <div className={m_styles.full_image}>
+                    <img src={`/folders/${folder_name}/${images[viewingImage]}`} />
+                </div>
+                
+                <button className={m_styles.move_left_button} onClick={() => setViewingImage((viewingImage-1+images.length)%images.length)} />
+                <button className={m_styles.move_right_button} onClick={() => setViewingImage((viewingImage+1)%images.length)} />
+            </div>
+            :<></>}
         </MainPageFrame>
     );
 }

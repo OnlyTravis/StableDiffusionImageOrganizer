@@ -1,4 +1,5 @@
 import express from 'express';
+import sharp from 'sharp';
 import path from 'path';
 import fs from 'fs';
 
@@ -6,6 +7,26 @@ import { getImageList } from '../../dist/code/folder';
 import { deleteImage, moveImage, renameImage, renameImages } from '../code/folder';
 
 const router = express.Router();
+
+router.get("/folders/*", (req, res) => {
+    const image_path = path.join(process.env.OUTPUT_PATH, "../", req.url.split("?")[0]);
+    if (!fs.existsSync(image_path)) {
+        res.status(400).send("Image Doesn't Exist.");
+        return;
+    }
+
+    if (req.query && req.query.compress) {
+        const image = sharp(image_path);
+        image.metadata().then((metadata) => {
+            image.resize(Math.round(metadata.width / 4)).toFormat("jpeg").toBuffer().then((buffer) => {
+                res.contentType('image/jpeg');
+                res.send(buffer);
+            });
+        })
+    } else {
+        res.sendFile(image_path);
+    }
+});
 
 // For Getting Images List in Certain Folder
 router.get("/images", (req, res) => {

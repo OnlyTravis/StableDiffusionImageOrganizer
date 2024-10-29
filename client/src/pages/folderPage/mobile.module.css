@@ -66,8 +66,10 @@
     left: 0px;
     bottom: 0px;
     width: 33dvw;
+    font-family: sans-serif;
     font-size: 0.6em;
     font-weight: 500;
+    font-stretch: extra-condensed;
     text-align: center;
 }
 .selected_icon {
@@ -138,7 +140,7 @@
     scroll-snap-type: x mandatory;
     background-color: rgba(65, 65, 65, 0.536);
 }
-.full_image_container > .full_image {
+.full_image {
     width: 100dvw;
     min-width: 100dvw;
     height: 100dvh;
@@ -150,4 +152,37 @@
 .full_image > img {
     max-width: 100dvw;
     max-height: 100dvh;
+}
+.full_image_container > button {
+    width: 40dvw;
+    height: 100dvh;
+    position: absolute;
+    top: 0px;
+    background: none;
+    border: none;
+    padding: none;
+}
+.move_left_button {
+    left: 0px;
+}
+.move_right_button {
+    right: 0px;
+}
+
+/* Page Bar */
+.page_bar {
+    position: absolute;
+    left: 30px;
+    bottom: 10px;
+    display: inline-flex;
+    width: auto;
+    height: 50px;
+}
+.page_bar > button {
+    background: none;
+    padding: 10px;
+    border: none;
+    line-height: 50px;
+    font-size: 1.3em;
+    font-weight: bold;
 }
