@@ -135,9 +135,6 @@
     width: 100dvw;
     height: 100dvh;
     position: relative;
-    display: inline-flex;
-    overflow-x: scroll;
-    scroll-snap-type: x mandatory;
     background-color: rgba(65, 65, 65, 0.536);
 }
 .full_image {
@@ -152,6 +149,14 @@
 .full_image > img {
     max-width: 100dvw;
     max-height: 100dvh;
+}
+.full_image_name {
+    position: absolute;
+    right: 10px;
+    bottom: 2px;
+    width: 100dvw;
+    color: #d0e9ff;
+    text-align: right;
 }
 .full_image_container > button {
     width: 40dvw;

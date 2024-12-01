@@ -37,7 +37,9 @@ const FolderPage:FC = () => {
     const folder_name = window.location.pathname.slice(8);
 
     const updateImages = () => {
+        console.log(`updateImages: ${folder_name}`);
         axios.get(`/images?folder=${folder_name}`).then((responce) => {
+            console.log(responce.data)
             setImages(responce.data);  
         });
     } // Update images by fetching image list from server
@@ -255,7 +257,7 @@ const FolderPage:FC = () => {
                 <div className={m_styles.full_image}>
                     <img src={`/folders/${folder_name}/${images[viewingImage]}`} />
                 </div>
-                
+                <div className={m_styles.full_image_name}>{ images[viewingImage] }</div>
                 <button className={m_styles.move_left_button} onClick={() => setViewingImage((viewingImage-1+images.length)%images.length)} />
                 <button className={m_styles.move_right_button} onClick={() => setViewingImage((viewingImage+1)%images.length)} />
             </div>

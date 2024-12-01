@@ -22,7 +22,9 @@ router.post("/login", (req, res) => {
     const token = jwt.sign({
         logged_in: true,
     }, process.env.SECRET);
-    res.cookie("jwt", token);
+    res.cookie("jwt", token, {
+        expires: new Date(Date.now() + 30*24*3600000)
+    });
 
     res.status(200).json({
         status: "Success",

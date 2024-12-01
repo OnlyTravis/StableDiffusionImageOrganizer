@@ -1,4 +1,5 @@
-Folder Page
- - Move Selected Images 
-Settings Page
- ?
+Layered Folder
+Change folder icon
+Show small icon indicating object is folder or image
+
+Dynamic Prompt Generation
